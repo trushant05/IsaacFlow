@@ -8,7 +8,7 @@ import os
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Sphinx Book Theme Template'
+project = 'IsaacFlow'
 copyright = '2025, Trushant Adeshara'
 author = 'Trushant Adeshara'
 
@@ -100,7 +100,7 @@ language = "en"
 
 import sphinx_book_theme
 
-html_title = "Sphinx Book Theme Template"
+html_title = "IsaacFlow<"
 html_theme_path = [sphinx_book_theme.get_html_theme_path()]
 html_theme = "sphinx_book_theme"
 #TODO Add logo of the project
@@ -118,19 +118,19 @@ html_css_files = ["custom.css"]
 html_theme_options = {
     "path_to_docs": "docs/",
     "collapse_navigation": True,
-    "repository_url": "https://github.com/trushant05/sphinx_book_theme_template",
+    "repository_url": "https://github.com/trushant05/IsaacFlow",
     "use_repository_button": True,
     "use_issues_button": True,
     "use_edit_page_button": True,
     "show_toc_level": 1,
     "use_sidenotes": True,
     "logo": {
-        "text": "Sphinx Book Theme Template"
+        "text": "IsaacFlow"
     },
     "icon_links": [
             {
                 "name": "GitHub",
-                "url": "https://github.com/trushant05/sphinx_book_theme_template",
+                "url": "https://github.com/trushant05/IsaacFlow",
                 "icon": "fa-brands fa-square-github",
                 "type": "fontawesome",
             },
@@ -142,8 +142,8 @@ html_theme_options = {
             },
             {
                 "name": "Stars",
-                "url": "https://img.shields.io/github/stars/trushant05/sphinx_book_theme_template?color=fedcba",
-                "icon": "https://img.shields.io/github/stars/trushant05/sphinx_book_theme_template?color=fedcba",
+                "url": "https://img.shields.io/github/stars/trushant05/IsaacFlow?color=fedcba",
+                "icon": "https://img.shields.io/github/stars/trushant05/IsaacFlow?color=fedcba",
                 "type": "url",
             },
         ],

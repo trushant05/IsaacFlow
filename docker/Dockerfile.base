@@ -1,0 +1,79 @@
+# Copyright (c) 2022-2025, The Isaac Lab Project Developers (https://github.com/isaac-sim/IsaacLab/blob/main/CONTRIBUTORS.md).
+# All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
+# Nvidia Dockerfiles: https://github.com/NVIDIA-Omniverse/IsaacSim-dockerfiles
+# Please check above link for license information.
+
+# Base image
+ARG ISAACSIM_BASE_IMAGE_ARG
+ARG ISAACSIM_VERSION_ARG
+FROM ${ISAACSIM_BASE_IMAGE_ARG:-nvcr.io/nvidia/isaac-sim}:${ISAACSIM_VERSION_ARG:-5.0.0} AS base
+ENV ISAACSIM_VERSION=${ISAACSIM_VERSION_ARG}
+
+# Set default RUN shell to bash
+SHELL ["/bin/bash", "-c"]
+
+# Adds labels to the Dockerfile
+LABEL version="5.0.0"
+LABEL description="Dockerfile for building and running Isaac Sim container image."
+
+# Arguments
+# Path to Isaac Sim root folder
+ARG ISAACSIM_ROOT_PATH_ARG
+ENV ISAACSIM_ROOT_PATH=${ISAACSIM_ROOT_PATH_ARG}
+# Home dir of docker user, typically '/root'
+ARG DOCKER_USER_HOME_ARG
+ENV DOCKER_USER_HOME=${DOCKER_USER_HOME_ARG}
+
+# Set environment variables
+ENV LANG=C.UTF-8
+ENV DEBIAN_FRONTEND=noninteractive
+
+USER root
+
+# Install dependencies and remove cache
+RUN --mount=type=cache,target=/var/cache/apt \
+    apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    cmake \
+    git \
+    libglib2.0-0 \
+    ncurses-term \
+    wget && \
+    apt -y autoremove && apt clean autoclean && \
+    rm -rf /var/lib/apt/lists/*
+
+# for singularity usage, have to create the directories that will binded
+RUN mkdir -p ${ISAACSIM_ROOT_PATH}/kit/cache && \
+    mkdir -p ${DOCKER_USER_HOME}/.cache/ov && \
+    mkdir -p ${DOCKER_USER_HOME}/.cache/pip && \
+    mkdir -p ${DOCKER_USER_HOME}/.cache/nvidia/GLCache &&  \
+    mkdir -p ${DOCKER_USER_HOME}/.nv/ComputeCache && \
+    mkdir -p ${DOCKER_USER_HOME}/.nvidia-omniverse/logs && \
+    mkdir -p ${DOCKER_USER_HOME}/.local/share/ov/data && \
+    mkdir -p ${DOCKER_USER_HOME}/Documents
+
+# for singularity usage, create NVIDIA binary placeholders
+RUN touch /bin/nvidia-smi && \
+    touch /bin/nvidia-debugdump && \
+    touch /bin/nvidia-persistenced && \
+    touch /bin/nvidia-cuda-mps-control && \
+    touch /bin/nvidia-cuda-mps-server && \
+    touch /etc/localtime && \
+    mkdir -p /var/run/nvidia-persistenced && \
+    touch /var/run/nvidia-persistenced/socket
+
+# aliasing isaaclab.sh and python for convenience
+RUN echo "alias python=/isaac-sim/python.sh" >> ${HOME}/.bashrc && \
+    echo "alias python3=/isaac-sim/python.sh" >> ${HOME}/.bashrc && \
+    echo "alias pip='/isaac-sim/python.sh -m pip'" >> ${HOME}/.bashrc && \
+    echo "alias pip3='/isaac-sim/python.sh -m pip'" >> ${HOME}/.bashrc && \
+    echo "export TZ=$(date +%Z)" >> ${HOME}/.bashrc && \
+    echo "shopt -s histappend" >> /root/.bashrc && \
+    echo "PROMPT_COMMAND='history -a'" >> /root/.bashrc
+
+# make working directory as the Isaac Lab directory
+# this is the default directory when the container is run
+WORKDIR ${DOCKER_WORKDIR}
