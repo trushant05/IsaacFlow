@@ -1,9 +1,6 @@
-Welcome to Sphinx Book Theme Template
-=====================================
+Welcome to IsaacFlow
+====================
 
-**Sphinx Book Theme Template** repository provides jumpstart for documenting projects.
-The workflow is containerized and attempt is made to get things off the ground with
-minimum efforts.
 
 Table of Contents
 =================
